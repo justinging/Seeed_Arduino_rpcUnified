@@ -15,40 +15,40 @@ extern "C" {
 };
 
 using namespace std;
-void *operator new(std::size_t count) THROW_BADALLOC
-{
-    void *p = erpc_malloc(count);
-    return p;
-}
+// void *operator new(std::size_t count) THROW_BADALLOC
+// {
+//     void *p = erpc_malloc(count);
+//     return p;
+// }
 
-void *operator new(std::size_t count, const std::nothrow_t &tag) THROW
-{
-    void *p = erpc_malloc(count);
-    return p;
-}
+// void *operator new(std::size_t count, const std::nothrow_t &tag) THROW
+// {
+//     void *p = erpc_malloc(count);
+//     return p;
+// }
 
-void *operator new[](std::size_t count) THROW_BADALLOC
-{
-    void *p = erpc_malloc(count);
-    return p;
-}
+// void *operator new[](std::size_t count) THROW_BADALLOC
+// {
+//     void *p = erpc_malloc(count);
+//     return p;
+// }
 
-void *operator new[](std::size_t count, const std::nothrow_t &tag) THROW
+// void *operator new[](std::size_t count, const std::nothrow_t &tag) THROW
 
-{
-    void *p = erpc_malloc(count);
-    return p;
-}
+// {
+//     void *p = erpc_malloc(count);
+//     return p;
+// }
 
-void operator delete(void *ptr) THROW
-{
-    erpc_free(ptr);
-}
+// void operator delete(void *ptr) THROW
+// {
+//     erpc_free(ptr);
+// }
 
-void operator delete[](void *ptr) THROW
-{
-    erpc_free(ptr);
-}
+// void operator delete[](void *ptr) THROW
+// {
+//     erpc_free(ptr);
+// }
 
 void *erpc_malloc(size_t size)
 {
