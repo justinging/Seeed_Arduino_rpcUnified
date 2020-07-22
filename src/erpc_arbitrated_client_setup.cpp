@@ -26,7 +26,7 @@ using namespace erpc;
 
 // global client variables
 static ManuallyConstructed<ArbitratedClientManager> s_client;
-static ClientManager *g_client = NULL;
+extern ClientManager *g_client;
 
 static ManuallyConstructed<BasicCodecFactory> s_codecFactory;
 static ManuallyConstructed<TransportArbitrator> s_arbitrator;
