@@ -37,7 +37,7 @@ public:
      *
      * @param[in] uartDrv Cmsis uart.
      */
-    UartTransport(Uart *uartDrv);
+    UartTransport(Uart *uartDrv, unsigned long baudrate, uint16_t config);
 
     /*!
      * @brief Destructor.
@@ -55,6 +55,8 @@ public:
 
 protected:
     Uart *m_uartDrv; /*!< Access structure of the USART Driver */
+    unsigned long m_baudrate;  /*!< Uart baud rate*/
+    uint16_t m_config; /*!< Uart config */
 
 private:
     /*!

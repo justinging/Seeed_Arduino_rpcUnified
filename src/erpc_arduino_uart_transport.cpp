@@ -19,8 +19,8 @@ using namespace erpc;
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
-UartTransport::UartTransport(Uart *uartDrv)
-    : m_uartDrv(uartDrv)
+UartTransport::UartTransport(Uart *uartDrv, unsigned long baudrate, uint16_t config)
+    : m_uartDrv(uartDrv), m_baudrate(baudrate), m_config(config)
 {
 }
 

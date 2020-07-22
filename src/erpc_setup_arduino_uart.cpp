@@ -21,9 +21,9 @@ static ManuallyConstructed<UartTransport> s_transport;
 ////////////////////////////////////////////////////////////////////////////////
 // Code
 ////////////////////////////////////////////////////////////////////////////////
-erpc_transport_t erpc_transport_uart_init(Uart *portName)
+erpc_transport_t erpc_transport_uart_init(Uart *port, unsigned long baudrate, uint16_t config)
 {
-    s_transport.construct(portName);
+    s_transport.construct(port, baudrate, config);
     if (s_transport->init() == kErpcStatus_Success)
     {
         return reinterpret_cast<erpc_transport_t>(s_transport.get());
