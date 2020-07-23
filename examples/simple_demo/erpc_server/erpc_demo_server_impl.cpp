@@ -15,6 +15,11 @@ binary_t *RD_demoHello1(const binary_t *txInput)
 {
     Serial.printf("RD_demoHello1 Called \n\r");
     Serial.printf("receive: %s\n\r", (char*)txInput->data);
+    for(int i = 0; i < 5; i++)
+    {
+        Serial.printf("wait...%ds\n\r", 5-i);
+        delay(1000);
+    }
     auto msg = "hi!";
     auto length = strlen(msg) + 1;
 

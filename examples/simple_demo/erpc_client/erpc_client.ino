@@ -14,6 +14,18 @@ static void free_binary_t_struct(binary_t *data)
 	}
 	erpc_free(data);
 }
+void idle_task(void *param)
+{
+	uint32_t x = 0;
+	pinMode(LED_BUILTIN, OUTPUT);
+	while(1)
+	{
+		x==0?x=1:x=0;
+		digitalWrite(LED_BUILTIN, x);
+		delay(1000);
+	}
+	vTaskDelete(NULL);
+}
 void app_task(void *param)
 {
 
@@ -31,6 +43,7 @@ void app_task(void *param)
 	{
 		{
 			/* RPC call */
+			Serial.printf("Call RD_demoHello1\n\r");
 			auto resp = RD_demoHello1(&b);
 			/* print return value */
 			Serial.printf("RD_demoHello1 :%s\n\r", resp->data);
@@ -39,6 +52,7 @@ void app_task(void *param)
 		}
 		{
 			binary_t r;
+			Serial.printf("Call RD_demoHello2\n\r");
 			auto code = RD_demoHello2(&b, &r);
 			if (code == lErrorOk_c)
 			{
@@ -54,6 +68,7 @@ void app_task(void *param)
 		{
 			int8_t out[256];
 			int32_t size;
+			Serial.printf("Call RD_demoHello3\n\r");
 			auto code = RD_demoHello3(&b, out, &size);
 			if (code == lErrorOk_c)
 			{
@@ -81,8 +96,8 @@ void setup()
 	{
 	};
 	delay(1000);
-	int result = xTaskCreate(app_task, "TEST_TASK", 1024, NULL, tskIDLE_PRIORITY + 1, &app_task_handle);
-
+	int result = xTaskCreate(app_task, "TEST_TASK", 1024, NULL, tskIDLE_PRIORITY + 2, &app_task_handle);
+	xTaskCreate(idle_task, "IDLE_TASK", 256, NULL, tskIDLE_PRIORITY + 1, &app_task_handle);
 	vTaskStartScheduler();
 }
 void loop()
