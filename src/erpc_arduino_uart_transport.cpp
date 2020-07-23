@@ -46,3 +46,13 @@ erpc_status_t UartTransport::underlyingSend(const uint8_t *data, uint32_t size)
     int32_t bytesWritten = m_uartDrv->write(data, size);
     return size != bytesWritten ? kErpcStatus_SendFailed : kErpcStatus_Success;
 }
+
+bool UartTransport::hasMessage()
+{
+    if(m_uartDrv->available())
+    {
+        return true;
+    }
+
+    return false;
+}

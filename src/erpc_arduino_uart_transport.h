@@ -53,6 +53,8 @@ public:
      */
     virtual erpc_status_t init(void);
 
+    bool hasMessage(void);
+
 protected:
     Uart *m_uartDrv; /*!< Access structure of the USART Driver */
     unsigned long m_baudrate;  /*!< Uart baud rate*/
