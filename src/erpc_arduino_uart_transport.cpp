@@ -37,7 +37,21 @@ erpc_status_t UartTransport::init(void)
 
 erpc_status_t UartTransport::underlyingReceive(uint8_t *data, uint32_t size)
 {
-    int32_t bytesRead = m_uartDrv->readBytes(data, size);
+    size_t bytesRead = 0;
+    while (bytesRead < size)
+    {
+        while (m_uartDrv->available())
+        {
+            int c =  m_uartDrv->read();
+            if (c < 0)
+                break;
+            *data++ = (char)c;
+            bytesRead++;
+            if(bytesRead == size)
+                break;
+        }
+        delay(10);
+    }
     return size != bytesRead ? kErpcStatus_ReceiveFailed : kErpcStatus_Success;
 }
 
@@ -49,10 +63,9 @@ erpc_status_t UartTransport::underlyingSend(const uint8_t *data, uint32_t size)
 
 bool UartTransport::hasMessage()
 {
-    if(m_uartDrv->available())
+    if (m_uartDrv->available())
     {
         return true;
     }
-
     return false;
 }
