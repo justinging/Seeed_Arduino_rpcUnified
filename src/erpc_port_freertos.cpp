@@ -52,7 +52,10 @@ using namespace std;
 
 void *erpc_malloc(size_t size)
 {
-    void *p = pvPortMalloc(size);
+    
+    void *p = NULL;
+    if(size)
+        p = pvPortMalloc(size);
     return p;
 }
 
