@@ -7,7 +7,6 @@
  */
 
 #include "erpc_arduino_uart_transport.h"
-#include <cstdio>
 
 using namespace erpc;
 
@@ -19,8 +18,8 @@ using namespace erpc;
 // Code
 ////////////////////////////////////////////////////////////////////////////////
 
-UartTransport::UartTransport(Uart *uartDrv, unsigned long baudrate, uint16_t config)
-    : m_uartDrv(uartDrv), m_baudrate(baudrate), m_config(config)
+UartTransport::UartTransport(HardwareSerial *uartDrv, unsigned long baudrate)
+    : m_uartDrv(uartDrv), m_baudrate(baudrate)
 {
 }
 
@@ -31,7 +30,7 @@ UartTransport::~UartTransport(void)
 erpc_status_t UartTransport::init(void)
 {
 
-    m_uartDrv->begin(115200);
+    m_uartDrv->begin(m_baudrate);
     return kErpcStatus_Success;
 }
 
@@ -57,7 +56,7 @@ erpc_status_t UartTransport::underlyingReceive(uint8_t *data, uint32_t size)
 
 erpc_status_t UartTransport::underlyingSend(const uint8_t *data, uint32_t size)
 {
-    int32_t bytesWritten = m_uartDrv->write(data, size);
+    uint32_t bytesWritten = m_uartDrv->write(data, size);
     return size != bytesWritten ? kErpcStatus_SendFailed : kErpcStatus_Success;
 }
 

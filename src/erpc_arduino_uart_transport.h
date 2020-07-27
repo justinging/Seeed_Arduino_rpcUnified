@@ -37,7 +37,7 @@ public:
      *
      * @param[in] uartDrv Cmsis uart.
      */
-    UartTransport(Uart *uartDrv, unsigned long baudrate, uint16_t config);
+    UartTransport(HardwareSerial *uartDrv, unsigned long baudrate);
 
     /*!
      * @brief Destructor.
@@ -56,9 +56,8 @@ public:
     bool hasMessage(void);
 
 protected:
-    Uart *m_uartDrv; /*!< Access structure of the USART Driver */
+    HardwareSerial *m_uartDrv; /*!< Access structure of the USART Driver */
     unsigned long m_baudrate;  /*!< Uart baud rate*/
-    uint16_t m_config; /*!< Uart config */
 
 private:
     /*!

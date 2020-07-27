@@ -9,8 +9,6 @@
 #include "erpc_transport_arbitrator.h"
 #include "erpc_config_internal.h"
 #include <cassert>
-#include <cstdio>
-#include <string>
 
 using namespace erpc;
 
