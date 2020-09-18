@@ -27,13 +27,20 @@ static void free_binary_t_struct(binary_t *data)
 
 void ble_init()
 {
-    FUNC_ENTRY("ble_init called");
+    FUNC_ENTRY;
     rpc_ble_init();
 }
 
+void ble_deinit()
+{
+    FUNC_ENTRY;
+    rpc_ble_deinit();
+}
+
+
 void ble_start()
 {
-    FUNC_ENTRY("ble_start called");
+    FUNC_ENTRY;
     rpc_ble_start();
 }
 //! @name rpc_gap
@@ -127,13 +134,13 @@ uint8_t le_get_max_link_num(void)
 extern P_FUN_LE_APP_CB _ble_gap_callback;
 void le_register_app_cb(P_FUN_LE_APP_CB ble_gap_callback)
 {
-    FUNC_ENTRY("le_register_app_cb called");
+    FUNC_ENTRY;
     _ble_gap_callback = ble_gap_callback;
 }
 extern P_FUN_HABDLE_GAP_MSG _handle_gap_msg;
 void le_register_msg_handler(P_FUN_HABDLE_GAP_MSG handle_gap_msg)
 {
-    FUNC_ENTRY("le_register_msg_handler called");
+    FUNC_ENTRY;
     _handle_gap_msg = handle_gap_msg;
 }
 
@@ -287,7 +294,7 @@ bool le_scan_info_filter(bool enable, uint8_t offset, uint8_t len, uint8_t *p_fi
 
 T_GAP_CAUSE le_get_conn_param(T_LE_CONN_PARAM_TYPE param, void *p_value, uint8_t conn_id)
 {
-    FUNC_ENTRY("le_get_conn_param called");
+    FUNC_ENTRY;
     T_GAP_CAUSE ret = GAP_CAUSE_SUCCESS;
     binary_t value;
     ret = (T_GAP_CAUSE)rpc_le_get_conn_param((RPC_T_LE_CONN_PARAM_TYPE)param, &value, conn_id);
@@ -384,7 +391,7 @@ T_GAP_CAUSE le_update_conn_param(uint8_t conn_id,
 extern P_FUN_GENERAL_APP_CB _ble_gattc_callback;
 void le_register_gattc_cb(P_FUN_GENERAL_APP_CB ble_gattc_callback)
 {
-    FUNC_ENTRY("le_register_gattc_cb called");
+    FUNC_ENTRY;
     _ble_gattc_callback = ble_gattc_callback;
 }
 
@@ -472,7 +479,7 @@ T_GAP_CAUSE client_attr_ind_confirm(uint8_t conn_id)
 extern P_FUN_SERVER_GENERAL_CB _ble_gatts_callback;
 void le_register_gatts_cb(P_FUN_SERVER_GENERAL_CB ble_gatts_callback)
 {
-    FUNC_ENTRY("le_register_gatts_cbcalled");
+    FUNC_ENTRY;
     _ble_gatts_callback = ble_gatts_callback;
 }
 
@@ -517,7 +524,7 @@ uint16_t ble_create_desc(uint8_t app_id, uint16_t char_handle, ble_desc_t desc)
 
 uint16_t ble_server_get_attr_value(uint8_t app_id, uint16_t handle, uint8_t *p_value)
 {
-    FUNC_ENTRY("ble_server_get_attr_value called");
+    FUNC_ENTRY;
     binary_t *data = rpc_ble_server_get_attr_value(app_id, handle);
     uint16_t value_len = 0;
     if (data != NULL)
