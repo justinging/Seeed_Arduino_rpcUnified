@@ -1,15 +1,15 @@
 
-#define TAG "API"
+#define TAG "BLE API"
 #include <stdlib.h>
 #include <string.h>
+#include "erpc/erpc_shim_unified.h"
+#include "erpc/erpc_port.h"
 #include "rpc_ble_api_utils.h"
 #include "rpc_ble_api_hal.h"
-#include "rpc_ble_api.h"
 #include "gap_adv.h"
 #include "ble_common.h"
 #include "profile_client.h"
 #include "profile_server.h"
-#include "erpc_port.h"
 #include "ble_server.h"
 #include "ble_client.h"
 
@@ -136,12 +136,14 @@ void le_register_app_cb(P_FUN_LE_APP_CB ble_gap_callback)
 {
     FUNC_ENTRY;
     _ble_gap_callback = ble_gap_callback;
+    FUNC_EXIT;
 }
 extern P_FUN_HABDLE_GAP_MSG _handle_gap_msg;
 void le_register_msg_handler(P_FUN_HABDLE_GAP_MSG handle_gap_msg)
 {
     FUNC_ENTRY;
     _handle_gap_msg = handle_gap_msg;
+    FUNC_EXIT;
 }
 
 T_GAP_CAUSE le_set_gap_param(T_GAP_LE_PARAM_TYPE param, uint8_t len, void *p_value)
@@ -393,6 +395,7 @@ void le_register_gattc_cb(P_FUN_GENERAL_APP_CB ble_gattc_callback)
 {
     FUNC_ENTRY;
     _ble_gattc_callback = ble_gattc_callback;
+    FUNC_EXIT;
 }
 
 bool ble_client_init(uint8_t num)
@@ -481,6 +484,7 @@ void le_register_gatts_cb(P_FUN_SERVER_GENERAL_CB ble_gatts_callback)
 {
     FUNC_ENTRY;
     _ble_gatts_callback = ble_gatts_callback;
+    FUNC_EXIT;
 }
 
 bool ble_server_init(uint8_t num)
@@ -540,6 +544,7 @@ uint16_t ble_server_get_attr_value(uint8_t app_id, uint16_t handle, uint8_t *p_v
             erpc_free(data);
         }
     }
+    FUNC_EXIT;
     return value_len;
 }
 

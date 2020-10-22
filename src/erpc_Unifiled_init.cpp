@@ -5,14 +5,15 @@
 */
 
 
-#include "erpc_arduino_uart_transport.h"
-#include "erpc_basic_codec.h"
-#include "erpc_arbitrated_client_manager.h"
-#include "erpc_threading.h"
-#include "erpc_simple_server.h"
-#include "erpc_transport_arbitrator.h"
-#include "erpc_port.h"
+#include "erpc/erpc_arduino_uart_transport.h"
+#include "erpc/erpc_basic_codec.h"
+#include "erpc/erpc_arbitrated_client_manager.h"
+#include "erpc/erpc_threading.h"
+#include "erpc/erpc_simple_server.h"
+#include "erpc/erpc_transport_arbitrator.h"
+#include "erpc/erpc_port.h"
 #include "rtl_ble/rtl_ble_unified.h"
+#include "erpc/erpc_shim_unified.h"
 
 using namespace erpc;
 
@@ -21,8 +22,8 @@ class MyMessageBufferFactory : public MessageBufferFactory
 public:
     virtual MessageBuffer create()
     {
-        uint8_t *buf = new uint8_t[1024];
-        return MessageBuffer(buf, 1024);
+        uint8_t *buf = new uint8_t[4096];
+        return MessageBuffer(buf, 4096);
     }
 
     virtual void dispose(MessageBuffer *buf)
@@ -36,37 +37,37 @@ public:
 
 // Uart ble_uart(&SERCOM_GPIO_SERIAL_X, PIN_GPIO_SERIAL_X_RX, PIN_GPIO_SERIAL_X_TX, PAD_GPIO_SERIAL_X_RX, PAD_GPIO_SERIAL_X_TX);
 // INTERRUPT_HANDLER_IMPLEMENT_GPIO_SERIAL_X(ble_uart)
+#define ble_uart Serial1
+// #define PIN_BLE_SERIAL_X_RX (84ul)
+// #define PIN_BLE_SERIAL_X_TX (85ul)
+// #define PAD_BLE_SERIAL_X_RX (SERCOM_RX_PAD_2)
+// #define PAD_BLE_SERIAL_X_TX (UART_TX_PAD_0)
+// #define SERCOM_BLE_SERIAL_X sercom0
+// #define INTERRUPT_HANDLER_IMPLEMENT_BLE_SERIAL_X(uart) \
+//  void SERCOM0_0_Handler() \
+//  { \
+//   (uart).IrqHandler(); \
+//  } \
+//  void SERCOM0_1_Handler() \
+//  { \
+//   (uart).IrqHandler(); \
+//  } \
+//  void SERCOM0_2_Handler() \
+//  { \
+//   (uart).IrqHandler(); \
+//  } \
+//  void SERCOM0_3_Handler() \
+//  { \
+//   (uart).IrqHandler(); \
+//  }
 
-#define PIN_BLE_SERIAL_X_RX (84ul)
-#define PIN_BLE_SERIAL_X_TX (85ul)
-#define PAD_BLE_SERIAL_X_RX (SERCOM_RX_PAD_2)
-#define PAD_BLE_SERIAL_X_TX (UART_TX_PAD_0)
-#define SERCOM_BLE_SERIAL_X sercom0
-#define INTERRUPT_HANDLER_IMPLEMENT_BLE_SERIAL_X(uart) \
- void SERCOM0_0_Handler() \
- { \
-  (uart).IrqHandler(); \
- } \
- void SERCOM0_1_Handler() \
- { \
-  (uart).IrqHandler(); \
- } \
- void SERCOM0_2_Handler() \
- { \
-  (uart).IrqHandler(); \
- } \
- void SERCOM0_3_Handler() \
- { \
-  (uart).IrqHandler(); \
- }
+// Uart ble_uart(&SERCOM_BLE_SERIAL_X, PIN_BLE_SERIAL_X_RX, PIN_BLE_SERIAL_X_TX, PAD_BLE_SERIAL_X_RX, PAD_BLE_SERIAL_X_TX);
+// extern "C"
+// {
+// INTERRUPT_HANDLER_IMPLEMENT_BLE_SERIAL_X(ble_uart)
+// }
 
-Uart ble_uart(&SERCOM_BLE_SERIAL_X, PIN_BLE_SERIAL_X_RX, PIN_BLE_SERIAL_X_TX, PAD_BLE_SERIAL_X_RX, PAD_BLE_SERIAL_X_TX);
-extern "C"
-{
-INTERRUPT_HANDLER_IMPLEMENT_BLE_SERIAL_X(ble_uart)
-}
-
-UartTransport g_transport(&ble_uart, 115200);
+UartTransport g_transport(&ble_uart, 1843200);
 MyMessageBufferFactory g_msgFactory;
 BasicCodecFactory g_basicCodecFactory;
 ArbitratedClientManager *g_client;
@@ -84,6 +85,7 @@ extern void _real_body();
 void add_services(erpc::SimpleServer *server)
 {
     server->addService(static_cast<erpc::Service *>(create_rpc_ble_callback_service()));
+    server->addService(static_cast<erpc::Service *>(create_rpc_wifi_callback_service()));
 }
 
 void runClient(void *arg)
@@ -102,8 +104,8 @@ void runServer(void *arg)
     }
 }
 
-Thread serverThread(&runServer, configMAX_PRIORITIES - 1, 4096, "runServer");
-Thread clientThread(&runClient, configMAX_PRIORITIES - 2, 2048, "runClient");
+Thread serverThread(&runServer, configMAX_PRIORITIES,    4096, "runServer");
+Thread clientThread(&runClient, configMAX_PRIORITIES - 2, 10240, "runClient");
 
 void erpc_init()
 {
